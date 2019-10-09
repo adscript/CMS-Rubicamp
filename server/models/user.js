@@ -43,4 +43,12 @@ userSchema.statics.checkToken = function(token){
     return jwt.verify(token, 'adscript');
 }
 
+userSchema.methods.destroyToken = function(){
+    return this.token = undefined;
+}
+
+userSchema.methods.getToken = function(){
+    return this.token;
+}
+
 module.exports = mongoose.model('User', userSchema);

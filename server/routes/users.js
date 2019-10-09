@@ -55,7 +55,6 @@ router.post('/login', function (req, res) {
     email
   }).then(user => {
     if (user) {
-      console.log(user);
       if (user[0].comparePassword(password)) {
         response.status = true;
         response.message = 'Logged in successfully';
@@ -98,5 +97,23 @@ router.post('/check', function (req, res) {
     res.json(response);
   }
 });
+
+// =============================================== DESTROY TOKEN =================================================
+router.get('/logout', function (req, res){
+  let token = req.header('Authorization');
+  let response = {
+    logout: false
+  }
+  let objEmail = User.checkToken(token);
+  if (objEmail) {
+    User.find({ email: objEmail.email }).then(user => {
+      if (user)
+        response.logout = true;
+      res.json(response);
+    }).catch(err => res.json(response));
+  } else {
+    res.json(response);
+  }
+})
 
 module.exports = router;

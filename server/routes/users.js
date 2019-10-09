@@ -106,14 +106,16 @@ router.get('/logout', function (req, res){
   }
   let objEmail = User.checkToken(token);
   if (objEmail) {
-    User.find({ email: objEmail.email }).then(user => {
-      if (user)
+    User.findOneAndUpdate({ email: objEmail.email },{token: ''}).exec().then(user => {
+      if (user){
         response.logout = true;
-      res.json(response);
+        user[0].destroyToken();
+      }
+        res.json(response);
     }).catch(err => res.json(response));
   } else {
     res.json(response);
   }
-})
+});
 
 module.exports = router;

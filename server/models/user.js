@@ -25,10 +25,22 @@ userSchema.pre('save', function (next) {
             console.log(err);
         else {
             this.password = hash;
-            this.token = jwt.sign({ email: this.email }, 'adscript');
+            this.token = this.generateToken();
             next();
         }
     })
 });
+
+userSchema.methods.generateToken = function(){
+    return jwt.sign({ email: this.email }, 'adscript');
+}
+
+userSchema.methods.comparePassword = function(password){
+    return bcrypt.compareSync(password, this.password);
+}
+
+userSchema.statics.checkToken = function(token){
+    return jwt.verify(token, 'adscript');
+}
 
 module.exports = mongoose.model('User', userSchema);

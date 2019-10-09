@@ -2,6 +2,13 @@ var express = require('express');
 var router = express.Router();
 const User = require('../models/user');
 
+// ================================================ GET USER LIST ===================================================
+router.get('/list', function (req, res){
+  User.find().then((users) => {
+    res.json(users);
+  }).catch(err => res.json(err));
+})
+
 // ================================================ REGISTER ROUTER =================================================
 router.post('/register', function (req, res) {
   let response = {
@@ -117,5 +124,7 @@ router.get('/logout', function (req, res){
     res.json(response);
   }
 });
+
+
 
 module.exports = router;

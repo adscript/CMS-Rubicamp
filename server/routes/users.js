@@ -26,7 +26,7 @@ router.post('/register', function (req, res) {
       }).then(docs => {
         if (docs) {
           response.message = 'Email already exist';
-          res.json(response);
+          res.status(400).json(response);
         } else {
           const user = new User({
             email, password
@@ -36,12 +36,12 @@ router.post('/register', function (req, res) {
             response.message = 'Register Successfull';
             response.data.email = email;
             response.token = result.token;
-            res.json(response);
+            res.status(201).json(response);
           })
         }
       }).catch(err => {
         response.message = 'Email or password not valid';
-        res.json(response);
+        res.status(400).json(response);
       })
   } else {
     response.message = 'Password not match';
@@ -67,7 +67,7 @@ router.post('/login', function (req, res) {
         response.message = 'Logged in successfully';
         response.data.email = email;
         response.token = user[0].generateToken();
-        User.update({ email }, { token: response.token }, ((err) => {
+        User.updateOne({ email }, { token: response.token }, ((err) => {
           if (err) response.message = err.toString();
           res.status(201).json(response);
         }))

@@ -7,6 +7,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var dataRouter = require('./routes/data');
 var dataDateRouter = require('./routes/datadate');
+var mapRouter = require('./routes/maps');
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/cmsdb', {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
@@ -23,6 +24,7 @@ app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/data', dataRouter);
 app.use('/api/datadate', dataDateRouter);
+app.use('/api/maps', mapRouter);
 
 
 module.exports = app;

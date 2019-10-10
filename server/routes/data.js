@@ -34,7 +34,7 @@ router.post('/', function (req, res) {
             response.data._id = result._id;
             response.data.letter = result.letter;
             response.data.frequency = result.frequency;
-            res.json(response);
+            res.status(201).json(response);
         }).catch(err => {
             response.message = 'failed to add'
             res.status(400).json(response);

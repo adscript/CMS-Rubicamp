@@ -6,9 +6,10 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var dataRouter = require('./routes/data');
+var dataDateRouter = require('./routes/datadate');
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/cmsdb', {useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/cmsdb', {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 
 var app = express();
 
@@ -21,5 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/data', dataRouter);
+app.use('/api/datadate', dataDateRouter);
+
 
 module.exports = app;

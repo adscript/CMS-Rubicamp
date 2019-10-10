@@ -24,7 +24,7 @@ router.get('/', function (req, res) {
     dataDate.find().then((date) => {
         res.json(date);
     }).catch(err => {
-        res.status(400).json(response);
+        res.status(400).json(err);
     })
 })
 

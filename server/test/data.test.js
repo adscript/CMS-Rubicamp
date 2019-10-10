@@ -190,7 +190,7 @@ describe('data', function () {
     // ============================================ END DELETE DATA TEST ==========================================================
 
     // ============================================ FIND DATA TEST ==========================================================
-    it('Seharusnya berhasil hapus data di table data dengan metode GET', function (done) {
+    it('Seharusnya berhasil find data di table data dengan metode GET', function (done) {
         chai.request(server)
             .post(`/api/data/search`)
             .send({

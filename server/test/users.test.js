@@ -53,9 +53,11 @@ describe('users', function () {
     it('seharusnya menambahkan satu user dengan metode POST', function (done) {
         chai.request(server)
             .post('/api/users/register')
-            .send({ 'email': 'testmail@gmail.com', 
-                    'password': 'AdnanGanteng12#', 
-                    'retypePassword' : 'AdnanGanteng12#' })
+            .send({
+                'email': 'testmail@gmail.com',
+                'password': 'AdnanGanteng12#',
+                'retypePassword': 'AdnanGanteng12#'
+            })
             .end(function (err, res) {
                 res.should.have.status(201);
                 res.should.be.json;
@@ -75,8 +77,10 @@ describe('users', function () {
     it('seharusnya berhasil login dengan metode POST', function (done) {
         chai.request(server)
             .post('/api/users/login')
-            .send({ 'email': 'adnanradjam@gmail.com', 
-                    'password': 'AdnanGanteng12#'})
+            .send({
+                'email': 'adnanradjam@gmail.com',
+                'password': 'AdnanGanteng12#'
+            })
             .end(function (err, res) {
                 res.should.have.status(201);
                 res.should.be.json;
@@ -93,4 +97,48 @@ describe('users', function () {
             });
     });
 
-})
+    it('seharusnya berhasil check token dengan metode POST', function (done) {
+        chai.request(server)
+            .post('/api/users/login')
+            .send({
+                'email': 'adnanradjam@gmail.com',
+                'password': 'AdnanGanteng12#'
+            })
+            .end(function (err, res) {
+                chai.request(server)
+                    .post('/api/users/check')
+                    .set('Authorization', res.body.token)
+                    .end(function (error, response) {
+                        response.should.have.status(200);
+                        response.should.be.json;
+                        response.body.should.be.a('object');
+                        response.body.should.have.property('valid');
+                        response.body.valid.should.equal(true);
+                        done();
+                    });
+            });
+    });
+
+    it('seharusnya berhasil hapus token saat logout dengan metode GET', function (done) {
+        chai.request(server)
+            .post('/api/users/login')
+            .send({
+                'email': 'adnanradjam@gmail.com',
+                'password': 'AdnanGanteng12#'
+            })
+            .end(function (err, res) {
+                chai.request(server)
+                    .get('/api/users/logout')
+                    .set('Authorization', res.body.token)
+                    .end(function (error, response) {
+                        response.should.have.status(200);
+                        response.should.be.json;
+                        response.body.should.be.a('object');
+                        response.body.should.have.property('logout');
+                        response.body.logout.should.equal(true);
+                        done();
+                    });
+            });
+    });
+
+});

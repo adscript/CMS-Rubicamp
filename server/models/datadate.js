@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var dataDateSchema = new Schema({
-    datadate: String,
+    letter: String,
     frequency: Number
 })
 

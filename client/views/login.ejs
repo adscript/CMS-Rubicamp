@@ -1,0 +1,204 @@
+<% include ./partials/header %>
+<style>
+    .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+        }
+    }
+
+    .form-signin {
+        width: 100%;
+        max-width: 420px;
+        padding: 15px;
+        margin: auto;
+    }
+
+    .form-label-group {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    .form-label-group>input,
+    .form-label-group>label {
+        height: 3.125rem;
+        padding: .75rem;
+    }
+
+    .form-label-group>label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        margin-bottom: 0;
+        /* Override default `<label>` margin */
+        line-height: 1.5;
+        color: #495057;
+        pointer-events: none;
+        cursor: text;
+        /* Match the input under the label */
+        border: 1px solid transparent;
+        border-radius: .25rem;
+        transition: all .1s ease-in-out;
+    }
+
+    .form-label-group input::-webkit-input-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input:-ms-input-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input::-ms-input-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input::-moz-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input::placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input:not(:placeholder-shown) {
+        padding-top: 1.25rem;
+        padding-bottom: .25rem;
+    }
+
+    .form-label-group input:not(:placeholder-shown)~label {
+        padding-top: .25rem;
+        padding-bottom: .25rem;
+        font-size: 12px;
+        color: #777;
+    }
+
+    /* Fallback for Edge
+-------------------------------------------------- */
+    @supports (-ms-ime-align: auto) {
+        .form-label-group>label {
+            display: none;
+        }
+
+        .form-label-group input::-ms-input-placeholder {
+            color: #777;
+        }
+    }
+
+    /* Fallback for IE
+-------------------------------------------------- */
+    @media all and (-ms-high-contrast: none),
+    (-ms-high-contrast: active) {
+        .form-label-group>label {
+            display: none;
+        }
+
+        .form-label-group input:-ms-input-placeholder {
+            color: #777;
+        }
+    }
+</style>
+<!-- Custom styles for this template -->
+<script src="https://kit.fontawesome.com/d8ee6b40b3.js" crossorigin="anonymous"></script>
+<link href="/stylesheets/cover.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="cover-container d-flex w-100 h-80 p-3 mx-auto flex-column">
+        <header class="masthead mb-auto">
+        </header>
+
+        <main role="main" class="inner cover">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="bg-primary text-white btn-lg btn-block login text-center" >Login</h5>
+                        </div>
+                        <div class="col">
+                            <h5 class="btn btn-outline-primary btn-lg btn-block register text-center">Register
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body" id="login-form">
+                    <form action="" id="submit-login">
+                        <div class="form-label-group">
+                            <input type="email" id="inputEmail" class="form-control" placeholder="Email address"
+                                required autofocus>
+                            <label for="inputEmail">Email address</label>
+                        </div>
+
+                        <div class="form-label-group">
+                            <input type="password" id="inputPassword" class="form-control" placeholder="Password"
+                                required>
+                            <label for="inputPassword">Password</label>
+                        </div>
+
+                        <button type="button" class="btn btn-info btn-login btn-block">Log In</button>
+                    </form>
+                </div>
+                <div class="card-body" id="register-form" style="display: none">
+                        <form action="" id="submit-register">
+                    <div class="form-label-group">
+                        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required
+                            autofocus>
+                        <label for="inputEmail">Email address</label>
+                    </div>
+
+                    <div class="form-label-group">
+                        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                        <label for="inputPassword">Password</label>
+                    </div>
+
+                    <div class="form-label-group">
+                        <input type="password" id="inputPasswordConfirmation" class="form-control"
+                            placeholder="Confirmation Password" required>
+                        <label for="inputPasswordConfirmation">Confirm Password</label>
+                    </div>
+                    <button type="button" class="btn btn-info btn-register btn-block">Register Now</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <footer class="mastfoot mt-auto">
+        </footer>
+    </div>
+
+
+
+    <% include ./partials/script %>
+    <script>
+        $(() => {
+            $('.login').on('click', e => {
+                e.preventDefault();
+                $('.login').removeClass( "btn btn-outline-primary" ).addClass( "bg-primary text-white" );
+                $('.register').removeClass( "bg-primary text-white" ).addClass( "btn btn-outline-primary" );
+                $('#login-form').css("display", "");
+                $('#register-form').css("display", "none");
+            })
+            $('.register').on('click', e => {
+                e.preventDefault();
+                $('.register').removeClass( "btn btn-outline-primary" ).addClass( "bg-primary text-white" );
+                $('.login').removeClass( "bg-primary text-white" ).addClass( "btn btn-outline-primary" );
+                $('#register-form').css("display", "");
+                $('#login-form').css("display", "none");
+            })
+        })
+
+    </script>
+
+</body>
+
+</html>

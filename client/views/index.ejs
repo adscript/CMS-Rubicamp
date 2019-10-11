@@ -1,50 +1,57 @@
 <% include ./partials/header %>
-    <style>
-        .bd-placeholder-img {
-          font-size: 1.125rem;
-          text-anchor: middle;
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-          user-select: none;
-        }
-  
-        @media (min-width: 768px) {
-          .bd-placeholder-img-lg {
-            font-size: 3.5rem;
-          }
-        }
-      </style>
-      <!-- Custom styles for this template -->
-      <script src="https://kit.fontawesome.com/d8ee6b40b3.js" crossorigin="anonymous"></script>
-      <link href="/stylesheets/cover.css" rel="stylesheet">
-    </head>
-    <body>
-      <div class="container d-flex w-100 h-100 p-3 mx-auto flex-column">
+<style>
+  .bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+  }
+</style>
+<!-- Custom styles for this template -->
+<script src="https://kit.fontawesome.com/d8ee6b40b3.js" crossorigin="anonymous"></script>
+<link href="/stylesheets/cover.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <header class="masthead mb-auto">
     </header>
-  
-    <main role="main" class="inner cover">
-        <div class="card">
-            <h5 class="card-header"><i class="fas fa-bookmark" style="color: grey !important"></i> Welcome to Dashboard</h5>
-            <div class="card-body">
-              <a href="/line" class="card-title btn btn-outline-primary btn-lg btn-block" role="button"><i class="fas fa-chart-line"></i><br/> Line </a>
-              <a href="/pie" class="card-title btn btn-outline-success btn-lg btn-block" role="button"><i class="fas fa-chart-pie"></i><br/> Pie </a>
-              <a href="/bar" class="card-title btn btn-outline-danger btn-lg btn-block" role="button"><i class="fas fa-chart-bar"></i><br/> Bar </a>
-              <a href="/map" class="card-title btn btn-outline-warning btn-lg btn-block" role="button"><i class="fas fa-globe-asia"></i><br/> Map </a>
-              <a href="/login" class="card-title btn btn-outline-info btn-lg btn-block" role="button"><i class="fas fa-user-cog"></i> Admin Panel </a>
-            </div>
-          </div>
+
+    <main role="main" class="inner cover dashboard-main">
+      <div class="card">
+        <h5 class="card-header " style="color: black"><i class="fas fa-bookmark" style="color: grey !important"></i> Welcome to Dashboard
+        </h5>
+        <div class="card-body">
+          <a href="/line" class="card-title btn btn-outline-primary btn-lg btn-block" role="button"><i
+              class="fas fa-chart-line"></i><br /> Line </a>
+          <a href="/pie" class="card-title btn btn-outline-success btn-lg btn-block" role="button"><i
+              class="fas fa-chart-pie"></i><br /> Pie </a>
+          <a href="/bar" class="card-title btn btn-outline-danger btn-lg btn-block" role="button"><i
+              class="fas fa-chart-bar"></i><br /> Bar </a>
+          <a href="/map" class="card-title btn btn-outline-warning btn-lg btn-block" role="button"><i
+              class="fas fa-globe-asia"></i><br /> Map </a>
+          <a href="/login" class="card-title btn btn-outline-info btn-lg btn-block" role="button"><i
+              class="fas fa-user-cog"></i> Admin Panel </a>
+        </div>
+      </div>
     </main>
-  
+
     <footer class="mastfoot mt-auto">
     </footer>
   </div>
 
 
 
-  <% include ./partials/header %>
-  
+  <% include ./partials/script %>
+
 </body>
 
 </html>

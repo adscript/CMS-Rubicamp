@@ -13,7 +13,6 @@ var userSchema = new Schema({
     password: {
         type: String,
         require: true,
-        match: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^0-9A-Za-z])(?=.{8,})/
     },
     token: String
 });

@@ -26,7 +26,7 @@ router.post('/register', function (req, res) {
       }).then(docs => {
         if (docs) {
           response.message = 'Email already exist';
-          res.status(400).json(response);
+          res.json(response);
         } else {
           const user = new User({
             email, password
@@ -41,10 +41,11 @@ router.post('/register', function (req, res) {
         }
       }).catch(err => {
         response.message = 'Email or password not valid';
-        res.status(400).json(response);
+        res.json(response);
       })
   } else {
     response.message = 'Password not match';
+    res.json(response)
   }
 });
 
@@ -73,12 +74,12 @@ router.post('/login', function (req, res) {
         }))
       }
       else {
-        response.message = 'Wrong Password';
-        res.status(400).json(response);
+        response.message = 'Wrong Email or Password';
+        res.json(response);
       }
     } else {
-      response.message = 'no email found';
-      res.status(400).json(response);
+      response.message = 'No email found';
+      res.json(response);
     }
   })
 });

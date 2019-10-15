@@ -166,6 +166,7 @@
         }
 
         const searchData = () => {
+            $('.reset-btn').show();
             $.ajax({
                 url: urldata + 'search',
                 method: 'POST',
@@ -304,7 +305,6 @@
 
             $('#letterSearch, #frequencySearch').on('keyup', (e) => {
                 searchData();
-                $('.reset-btn').show();
             })
 
             $('.reset-btn').click(e => {

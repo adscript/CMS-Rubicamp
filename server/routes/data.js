@@ -47,18 +47,15 @@ router.post('/', function (req, res) {
 
 // ================================= BROWSE DATA ================================
 router.post('/search', (req, res) => {
-    let response = {};
     let { letter, frequency } = req.body;
-    if (letter != undefined || frequency != undefined) {
+    if (letter != undefined || frequency.toString() != 'NaN') {
         let filterData = {};
-        letter ? filterData.letter = letter : '';
-        frequency ? filterData.frequency = frequency : '';
+        letter ? filterData.letter = {$regex : letter, $options: 'i'} : undefined;
+        frequency.length > 0 ? filterData.frequency = Number(frequency) : undefined;
+
         Data.find(filterData).then(data => {
-            res.status(200).json(data);
+            res.json(data);
         }).catch(err => res.status(400).json(err));
-    } else {
-        response.message = 'Tidak boleh kosong';
-        res.status(400).json(response);
     }
 })
 

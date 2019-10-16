@@ -14,4 +14,19 @@ router.get('/data', function(req, res) {
   res.render('data');
 });
 
+router.get('/datadate', function(req, res) {
+  res.render('datadate');
+});
+
+router.get('/line', function(req, res) {
+  res.render('line');
+});
+
+router.get('/bar', function(req, res) {
+  res.render('bar');
+});
+
+router.get('/pie', function(req, res) {
+  res.render('pie');
+});
 module.exports = router;

@@ -11,6 +11,19 @@ router.get('/', function (req, res) {
     })
 })
 
+router.get('/bar', function (req, res) {
+    Data.aggregate().group(
+        {
+            _id: "$letter",
+            total: { $sum: "$frequency" }
+        }
+    ).then((data) => {
+        res.json(data);
+    }).catch(err => {
+        res.status(400).json(response);
+    })
+})
+
 // ============================ ADD DATA  ======================================
 router.post('/', function (req, res) {
     let response = {
@@ -50,7 +63,7 @@ router.post('/search', (req, res) => {
     let { letter, frequency } = req.body;
     if (letter != undefined || frequency.toString() != 'NaN') {
         let filterData = {};
-        letter ? filterData.letter = {$regex : letter, $options: 'i'} : undefined;
+        letter ? filterData.letter = { $regex: letter, $options: 'i' } : undefined;
         frequency.length > 0 ? filterData.frequency = Number(frequency) : undefined;
 
         Data.find(filterData).then(data => {
@@ -87,6 +100,7 @@ router.put('/:id', (req, res) => {
         res.status(400).json(response);
     };
 });
+
 
 // ================================== DELETE DATA =================================
 router.delete('/:id', (req, res) => {

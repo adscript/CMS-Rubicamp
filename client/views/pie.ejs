@@ -1,0 +1,99 @@
+<% include ./partials/header %>
+<style>
+    .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+        }
+    }
+</style>
+<!-- Custom styles for this template -->
+<script src="https://kit.fontawesome.com/d8ee6b40b3.js" crossorigin="anonymous"></script>
+<link href="/stylesheets/cover.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <header class="masthead mb-auto text-rig">
+        </header>
+
+        <main role="main" class="inner cover dashboard-main">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row justify-content-between">
+                        <h5 class="text-left col align-bottom" style="color: black">
+                            <i class="fas fa-bookmark" style="color: grey !important"></i> Pie Chart
+                        </h5>
+                        <h5 class="text-right col" style="color: black">
+                            <a role="button" class="btn btn-success" href="/"><i class="fas fa-home"
+                                    style="color: white !important"></i></a>
+                            <a role="button" class="btn btn-info" href="/data"><i class="fas fa-table"
+                                    style="color: white !important"></i></a>
+                        </h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="mastfoot mt-auto">
+        </footer>
+    </div>
+
+
+
+    <% include ./partials/script %>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        const googleChart = (datadata) => {
+            google.charts.load('current', { 'packages': ['corechart'] });
+            google.charts.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+
+                var data = google.visualization.arrayToDataTable([
+                    ['Letter', 'Frequency'],
+                    ...datadata
+                ]);
+
+                var options = {
+                    
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+
+                chart.draw(data, options);
+            }
+        }
+
+
+        const urldata = 'http://localhost:3000/api/data/bar';
+        const getDataDate = () => {
+            $.ajax({
+                url: urldata,
+                method: 'GET'
+            }).done(datadate => {
+                let arrDate = datadate.map(value => {
+                    return [value._id, value.total];
+                });
+                googleChart(arrDate);
+            })
+        }
+
+        $(() => {
+            getDataDate();
+        })
+    </script>
+</body>
+
+</html>

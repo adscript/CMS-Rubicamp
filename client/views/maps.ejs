@@ -1,0 +1,396 @@
+<% include ./partials/header %>
+<script src="https://kit.fontawesome.com/d8ee6b40b3.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/stylesheets/formfloat.css" type="text/css">
+</head>
+
+<body>
+    <% include ./partials/navbar %>
+
+    <div class="jumbotron jumbotron-fluid bg-white">
+        <div class="container">
+            <div class="row p-4 align-middle mb-2 getBG">
+                <div class="col-2">
+                    <div class="row">
+                        <a role="button" class="btn btn-primary text-white p-2 mt-1 addData" href=""><i
+                                class="fas fa-plus"></i>
+                            Add</a>
+                        <a role="button" class="btn btn-danger text-white p-2 mt-1 beforeAdd" href="" id="cancelData"
+                            style="display: none;"><i class="fas fa-times"></i> Cancel</a>
+                    </div>
+                </div>
+                <div class="col-10">
+                    <form class="form-row beforeAdd saveData" style="display: none;">
+                        <div class="col-4">
+                            <div class="form-label-group">
+                                <input type="text" id="title" class="form-control" placeholder="Letter" required
+                                    autofocus>
+                                <label for="addLetter">Title</label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-label-group">
+                                <input type="number" step="0.0000000000001" id="latitude" class="form-control"
+                                    placeholder="lat" required readonly autofocus>
+                                <label for="addFrequency">Latitude</label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-label-group">
+                                <input type="number" step="0.0000000000001" id="longitude" class="form-control"
+                                    placeholder="lng" required readonly autofocus>
+                                <label for="addFrequency">Longitude</label>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-label-group">
+                                <button type="submit" class="btn btn-primary text-white p-2 mt-1" href=""><i
+                                        class="fas fa-save"></i> Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <h2>Search</h2>
+            <hr />
+            <div class="row searchData mb-2">
+                <div class="col-4">
+                    <div class="form-label-group">
+                        <input type="text" id="titleSearch" class="form-control" placeholder="Title" autofocus>
+                        <label for="titleSearch">Title</label>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="form-label-group reset-btn" style="display: none;">
+                        <button type="button" class="btn btn-danger text-white p-2 mt-1" href=""><i
+                                class="fas fa-undo"></i></button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="alert alert-success alert-dismissible fade show successMessage col-12" role="alert"
+                style="display: none;">
+                <a role="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </a>
+            </div>
+            <div class="alert alert-danger alert-dismissible failedMessage col-12" role="alert" style="display: none;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+
+            <table class="table" id="viewTable">
+                <div class="alert alert-danger alert-dismissible noData col-12" role="alert" style="display: none;">
+                </div>
+            </table>
+
+        </div>
+    </div>
+
+
+
+    <% include ./partials/script %>
+    <script src="/javascripts/navbar.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script type="text/javascript"
+        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDvp5CKHX1e1_TP_JizSu5gW4oS4rb1Yy0"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script>
+        const urldata = 'http://localhost:3000/api/maps/';
+
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger mr-3'
+            },
+            buttonsStyling: false
+        })
+
+        const geoCode = (title) => {
+            return new Promise((resolve, reject) => {
+                var geo = new google.maps.Geocoder;
+                geo.geocode({ 'address': title }, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        var lat = results[0].geometry.location.lat();
+                        var lng = results[0].geometry.location.lng();
+                        resolve({ lat, lng });
+                    } else {
+                        reject('Not Found')
+                    }
+                })
+            })
+        }
+
+        const generateTable = (datas) => {
+            $('table > thead, table > tbody').remove();
+            if (datas.length > 0) {
+                $('#viewTable').append(`
+                    <thead class="thead-dark">
+                    <tr>
+                    <th scope="col"><p class="invisible"> test </p></th>
+                    <th scope="col ml-5">#</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Latitude</th>
+                    <th scope="col">Longitude</th>
+                    <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableData">
+
+                    </tbody>
+                    `);
+
+                datas.forEach((data, index) => {
+                    $('#tableData').append(`
+                         <tr>
+                            <th scope="col"><p class="invisible"> test </p></th>
+                            <th scope="row">${index + 1}</th>
+                            <td><span data-id="${data._id}" class="title-data">${data.title}</span>
+                                <input type="text" size="6" id="title-${data._id}" class="edit-input form-control"
+                                value="${data.title}" style="display:none;" required>
+                            </td>
+                            <td><span data-id="${data._id}" class="latitude-data">${data.lat}</span>
+                                <input type="number" step="0.0000000000001" id="latitude-${data._id}" class="edit-input form-control"
+                                value="${data.lat}" style="display:none;" required readonly>
+                            </td>
+                            <td><span data-id="${data._id}" class="longitude-data">${data.lng}</span>
+                                <input type="number" step="0.0000000000001" id="longitude-${data._id}" class="edit-input form-control"
+                                value="${data.lng}" style="display:none;" required readonly>
+                            </td>
+                            <td>   
+                            <a role="button" data-id="${data._id}" class="btn btn-success mr-1 btn-edit"
+                                href=""><i class="fas fa-pen-alt"></i></a>
+                            <a role="button" data-id="${data._id}" class="btn btn-danger btn-delete"
+                                href=""><i class="fas fa-trash"></i></a>
+                            <a role="button" data-id="${data._id}" class="btn btn-success mr-1 btn-edited"
+                                href="" style="display:none;"><i class="fas fa-check"></i></a>
+                            <a role="button" data-id="${data._id}" class="btn btn-danger btn-cancel"
+                                href="" style="display:none;"><i class="fas fa-times"></i></a>
+                            </td>
+                        </tr>`)
+                });
+            }
+        }
+
+        const viewData = () => {
+            $.ajax({
+                url: urldata,
+                method: 'GET'
+            }).done(datas => {
+                generateTable(datas);
+            }).fail(response => {
+                $('.noData').text('Error').show();
+            })
+        }
+
+        const searchData = () => {
+            $('.reset-btn').show();
+            $.ajax({
+                url: urldata + 'search',
+                method: 'POST',
+                data: {
+                    title: $('#titleSearch').val(),
+                },
+                dataType: 'json'
+            }).done(datas => {
+                generateTable(datas);
+            }).fail(response => {
+                $('.noData').text('Error').show();
+            })
+        }
+
+        const addData = () => {
+            $.ajax({
+                url: urldata,
+                method: 'POST',
+                data: {
+                    title: $('#title').val(),
+                    lat: $('#latitude').val(),
+                    lng: $('#longitude').val()
+                },
+                dataType: 'json'
+            }).done(response => {
+                if (response.success) {
+                    $('.successMessage').text(`${response.message}`).show();
+                    setTimeout(() => $('.successMessage').hide(500), 2500);
+                    $('#title').val("");
+                    $('#latitude').val("");
+                    $('#longitude').val("");
+                    $('#titleSearch').val(response.data.title);
+                    $('#latitudeSearch').val(response.data.latitude);
+                    $('#longitudeSearch').val(response.data.longitude);
+                    searchData();
+                } else {
+                    $('.failedMessage').text(response.message).show();
+                }
+            }).fail(response => {
+                $('.failedMessage').text(response.message).show();
+            })
+        }
+
+        const editData = (id) => {
+            $.ajax({
+                url: urldata + `${id}`,
+                method: 'PUT',
+                data: {
+                    title: $(`#title-${id}`).val(),
+                    latitude: $(`#latitude-${id}`).val(),
+                    longitude: $(`#longitude-${id}`).val()
+                },
+                dataType: 'json'
+            }).done(response => {
+                if (response.success) {
+                    Swal.fire({
+                        position: 'middle',
+                        type: 'success',
+                        title: 'Your work has been saved',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    $(`#title-${id}, #latitude-${id}, #longitude-${id}`).hide();
+                    $(`span[data-id='${id}'].title-data`).text(response.data.title);
+                    $(`span[data-id='${id}'].latitude-data`).text(response.data.latitude);
+                    $(`span[data-id='${id}'].longitude-data`).text(response.data.longitude);
+                    $(`span[data-id='${id}']`).show();
+                    $(`.btn-edited[data-id='${id}'], .btn-cancel[data-id='${id}'] `).hide();
+                    $(`.btn-edit[data-id='${id}'], .btn-delete[data-id='${id}']`).show();
+                }
+            })
+        }
+
+        const deleteData = (id) => {
+            $.ajax({
+                url: urldata + `${id}`,
+                method: 'delete'
+            }).done(response => {
+                if (response.success) {
+                    viewData();
+                }
+            })
+        }
+
+        $(() => {
+            viewData();
+            $('#mapMenu').addClass('active');
+            $('.addData').click(e => {
+                e.preventDefault();
+                $('.beforeAdd').show();
+                $('.addData').hide();
+                $('.getBG').addClass('bg-light rounded');
+            })
+
+            $('#title').on('keyup', e => {
+                geoCode($('#title').val()).then(resolve => {
+                    $('#latitude').val(resolve.lat);
+                    $('#longitude').val(resolve.lng);
+                }).catch(message => {
+                    $('#latitude').val("");
+                    $('#longitude').val("");
+                })
+            })
+
+            $('.saveData').submit(e => {
+                e.preventDefault();
+                addData();
+                $('.getBG').removeClass('bg-light rounded');
+            })
+
+            $('#cancelData').click(e => {
+                e.preventDefault();
+                $('.beforeAdd').hide();
+                $('.addData').show();
+                $('.getBG').removeClass('bg-light rounded');
+            })
+
+            $('#viewTable').on('click', '.btn-delete', function (e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                //confirmation alert
+                swalWithBootstrapButtons.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, cancel!',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.value) {
+                        swalWithBootstrapButtons.fire(
+                            'Deleted!',
+                            'Your data has been deleted.',
+                            'success'
+                        )
+                        deleteData(id);
+                    } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        swalWithBootstrapButtons.fire(
+                            'Cancelled',
+                            'Data not deleted',
+                            'error'
+                        )
+                    }
+                })
+            })
+
+            $('#titleSearch').on('keyup', (e) => {
+                searchData();
+            })
+
+            $('.reset-btn').click(e => {
+                e.preventDefault();
+                $('.reset-btn').hide();
+                $('#titleSearch').val("");
+                viewData();
+            })
+
+            $('#viewTable').on('click', '.btn-edit', function (e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                $(`#title-${id}, #latitude-${id}, #longitude-${id}`).show();
+                $(`span[data-id='${id}']`).hide();
+                $(`.btn-edited[data-id='${id}'], .btn-cancel[data-id='${id}'] `).show();
+                $(`.btn-edit[data-id='${id}'], .btn-delete[data-id='${id}']`).hide();
+            })
+
+            $('#viewTable').on('click', '.btn-edited', function (e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                editData(id);
+            })
+
+            $('#viewTable').on('keypress', '.edit-input', function (e) {
+                if (e.which == 13) {
+                    const id = $(this).siblings().eq(0).attr('data-id');
+                    editData(id);
+                }
+            })
+
+            $('#viewTable').on('click', '.btn-cancel', function (e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                $(`#title-${id}, #latitude-${id}, #longitude-${id}`).hide();
+                $(`span[data-id='${id}']`).show();
+                $(`#title-${id}`).val($(`span[data-id='${id}'].title-data`).text());
+                $(`#latitude-${id}`).val($(`span[data-id='${id}'].latitude-data`).text());
+                $(`#longitude-${id}`).val($(`span[data-id='${id}'].longitude-data`).text());
+                $(`.btn-edited[data-id='${id}'], .btn-cancel[data-id='${id}'] `).hide();
+                $(`.btn-edit[data-id='${id}'], .btn-delete[data-id='${id}']`).show();
+            })
+
+        })  
+    </script>
+
+</body>
+
+</html>
